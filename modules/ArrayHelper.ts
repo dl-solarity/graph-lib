@@ -1,29 +1,25 @@
 export function extendArray<T>(array: Array<T>, elements: Array<T>): Array<T> {
-  let set = new Set<T>();
-
-  for (let i = 0; i < array.length; i++) {
-    set.add(array[i]);
-  }
-
   for (let i = 0; i < elements.length; i++) {
-    set.add(elements[i]);
+    if (!array.includes(elements[i])) {
+      array.push(elements[i]);
+    }
   }
-
-  return set.values();
+  return array;
 }
 
 export function reduceArray<T>(array: Array<T>, elements: Array<T>): Array<T> {
-  let set = new Set<T>();
-  
-  for (let i = 0; i < array.length; i++) {
-    set.add(array[i]);
-  }
-
   for (let i = 0; i < elements.length; i++) {
-    set.delete(elements[i]);
-  }
+    if (array.includes(elements[i])) {
+      let index = array.indexOf(elements[i]);
 
-  return set.values();
+      let tmp = array[array.length - 1];
+      array[array.length - 1] = array[index];
+      array[index] = tmp;
+
+      array.pop();
+    }
+  }
+  return array;
 }
 
 export function upcastCopy<T extends V, V>(array: Array<T>): Array<V> {

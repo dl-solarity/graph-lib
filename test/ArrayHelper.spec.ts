@@ -1,13 +1,72 @@
-import { extendArray } from "../modules/ArrayHelper";
+import { Bytes } from "@graphprotocol/graph-ts";
+import { extendArray, reduceArray } from "../modules/ArrayHelper";
 
 describe("ArrayHelper", () => {
-    it("should extend base array", () => {
-        const BASE_ARRAY = [1,2,3];
-        const newValues = [5,6];
-        const newArray = extendArray<i32>(BASE_ARRAY, newValues);
+    describe("extendArray", () => {
+        it("should extend i32 array", () => {
+            const baseArray = [1,2,3];
+            const newValues = [5,6];
+            const newArray = extendArray<i32>(baseArray, newValues);
 
-        const expected = [1,2,3,5,6];
+            const expected = [1,2,3,5,6];
 
-        expect(newArray).toStrictEqual(expected);
+            expect(newArray).toStrictEqual(expected);
+        });
+
+        it("should extend Bytes array", () => {
+            const baseArray = [Bytes.fromI32(1), Bytes.fromI32(2), Bytes.fromI32(10)];
+            const newValues = [Bytes.fromI32(5), Bytes.fromI32(6)];
+
+            const newArray = extendArray<Bytes>(baseArray, newValues);
+
+            const expected = [Bytes.fromI32(1), Bytes.fromI32(2), Bytes.fromI32(10), Bytes.fromI32(5), Bytes.fromI32(6)];
+
+            expect(newArray).toStrictEqual(expected);
+        });
+
+        it("should extend and not duplicate", () => {
+            const baseArray = [Bytes.fromI32(1), Bytes.fromI32(2), Bytes.fromI32(10)];
+            const reduceValues = [Bytes.fromI32(5), Bytes.fromI32(6), Bytes.fromI32(10)];
+
+            const newArray = extendArray<Bytes>(baseArray, reduceValues);
+
+            const expected = [Bytes.fromI32(1), Bytes.fromI32(2), Bytes.fromI32(10), Bytes.fromI32(5), Bytes.fromI32(6)];
+
+            expect(newArray).toStrictEqual(expected);
+        });
+    });
+
+    describe("reduceArray", () => {
+        it("should reduce i32 array", () => {
+            const baseArray = [1,2,3];
+            const reduceValues = [2]
+            const newArray = reduceArray<i32>(baseArray, reduceValues);
+
+            const expected = [1,3];
+
+            expect(newArray).toStrictEqual(expected);
+        });
+
+        it("should reduce Bytes array", () => {
+            const baseArray = [Bytes.fromI32(1), Bytes.fromI32(2), Bytes.fromI32(10)];
+            const reduceValues = [Bytes.fromI32(10)];
+
+            const newArray = reduceArray<Bytes>(baseArray, reduceValues);
+
+            const expected = [Bytes.fromI32(1), Bytes.fromI32(2)];
+
+            expect(newArray).toStrictEqual(expected);
+        });
+
+        it("should reduce if in reduceValues are not in base", () => {
+            const baseArray = [Bytes.fromI32(1), Bytes.fromI32(2), Bytes.fromI32(10)];
+            const reduceValues = [Bytes.fromI32(10), Bytes.fromI32(5)];
+
+            const newArray = reduceArray<Bytes>(baseArray, reduceValues);
+
+            const expected = [Bytes.fromI32(1), Bytes.fromI32(2)];
+
+            expect(newArray).toStrictEqual(expected);
+        });
     });
 });
