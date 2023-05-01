@@ -1,5 +1,5 @@
-import { Bytes } from "@graphprotocol/graph-ts";
-import { extendArray, reduceArray } from "../modules/ArrayHelper";
+import { Address, Bytes } from "@graphprotocol/graph-ts";
+import { extendArray, reduceArray, upcastCopy } from "../modules/ArrayHelper";
 
 describe("ArrayHelper", () => {
     describe("extendArray", () => {
@@ -65,6 +65,17 @@ describe("ArrayHelper", () => {
             const newArray = reduceArray<Bytes>(baseArray, reduceValues);
 
             const expected = [Bytes.fromI32(1), Bytes.fromI32(2)];
+
+            expect(newArray).toStrictEqual(expected);
+        });
+    });
+
+    describe("upcastCopy", () => {
+        it("should upcast", () => {
+            const baseArray = [Address.fromBytes(Bytes.fromHexString("0x76e98f7d84603AEb97cd1c89A80A9e914f181679")),Address.fromBytes(Bytes.fromHexString("0x76e98f7d84603AEb97cd1c89A80A9e914f181670"))];
+            const expected = [Bytes.fromHexString("0x76e98f7d84603AEb97cd1c89A80A9e914f181679"),Bytes.fromHexString("0x76e98f7d84603AEb97cd1c89A80A9e914f181670")];
+
+            const newArray = upcastCopy<Address,Bytes>(baseArray);
 
             expect(newArray).toStrictEqual(expected);
         });
