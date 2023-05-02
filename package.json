@@ -5,17 +5,17 @@
   "author": "Distributed Lab",
   "readme": "README.md",
   "description": "This repository contains useful modules for writing subgraphs for the Graph project",  
-  
   "keywords": [
     "distributedlab",
     "ethereum",
     "subgraph",
     "thegraph"
   ],
-
   "scripts": {
     "test": "npx asp",
-    "lint-fix": "prettier --write \"./**/*.ts\" && prettier --write \"./**/*.js\""
+    "lint-fix": "prettier --write \"./**/*.ts\" && prettier --write \"./**/*.js\"",
+    "clean": "bash ./scripts/clean.sh",
+    "publish-to-npm": "npm run lint-fix && bash ./scripts/publish.sh"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,6 @@
     "husky": "^7.0.2",
     "prettier": "^2.7.1"
   },
-  "type": "module"
+  "type": "module",
+  "types": "index.ts"
 }

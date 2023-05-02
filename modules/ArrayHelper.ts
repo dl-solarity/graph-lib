@@ -1,4 +1,5 @@
 export function extendArray<T>(array: Array<T>, elements: Array<T>): Array<T> {
+  // pushUnique
   for (let i = 0; i < elements.length; i++) {
     if (!array.includes(elements[i])) {
       array.push(elements[i]);
@@ -8,6 +9,7 @@ export function extendArray<T>(array: Array<T>, elements: Array<T>): Array<T> {
 }
 
 export function reduceArray<T>(array: Array<T>, elements: Array<T>): Array<T> {
+  // remove
   for (let i = 0; i < elements.length; i++) {
     if (array.includes(elements[i])) {
       let index = array.indexOf(elements[i]);
