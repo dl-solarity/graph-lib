@@ -1,0 +1,29 @@
+{
+  "name": "@dlsl/graph-modules",
+  "version": "1.0.0-rc.1",
+  "license": "MIT",
+  "author": "Distributed Lab",
+  "readme": "README.md",
+  "description": "Useful modules for developing subgraphs for The Graph protocol",
+  "keywords": [
+    "distributedlab",
+    "ethereum",
+    "subgraph",
+    "thegraph"
+  ],
+  "files": [
+    "*"
+  ],
+  "dependencies": {
+    "@graphprotocol/graph-ts": "0.29.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dl-solidity-library/graph-modules.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dl-solidity-library/graph-modules/issues"
+  },
+  "type": "module",
+  "types": "index.ts"
+}
