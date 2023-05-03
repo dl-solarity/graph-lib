@@ -1,5 +1,5 @@
 import { Entity } from "@graphprotocol/graph-ts";
-import { findPrevHistory } from "../modules/HistorySearcher";
+import { findPrevHistory } from "../../modules/utils/HistorySearcher";
 import { BigInt } from "@graphprotocol/graph-ts";
 
 const storeMap = new Map<string, MockEntity>();

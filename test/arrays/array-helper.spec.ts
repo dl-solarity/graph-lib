@@ -1,5 +1,5 @@
 import { Address, Bytes } from "@graphprotocol/graph-ts";
-import { pushUnique, remove, upcastCopy } from "../modules/arrays/array-helper";
+import { pushUnique, remove, upcastCopy } from "../../modules/arrays/array-helper";
 
 describe("array-helper", () => {
   describe("pushUnique", () => {
