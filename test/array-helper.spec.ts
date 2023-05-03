@@ -1,7 +1,7 @@
 import { Address, Bytes } from "@graphprotocol/graph-ts";
-import { pushUnique, remove, upcastCopy } from "../modules/ArrayHelper";
+import { pushUnique, remove, upcastCopy } from "../modules/array-helper";
 
-describe("ArrayHelper", () => {
+describe("array-helper", () => {
   describe("pushUnique", () => {
     it("should extend i32 array", () => {
       const baseArray = [1, 2, 3];

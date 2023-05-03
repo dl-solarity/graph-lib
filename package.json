@@ -1,10 +1,10 @@
 {
-  "name": "graph-modules",
-  "version": "1.0.0",
+  "name": "dlsl",
+  "version": "1.0.0-rc.1",
   "license": "MIT",
   "author": "Distributed Lab",
   "readme": "README.md",
-  "description": "This repository contains useful modules for writing subgraphs for the Graph project",  
+  "description": "Useful modules for developing subgraphs for The Graph protocol",
   "keywords": [
     "distributedlab",
     "ethereum",
@@ -12,6 +12,7 @@
     "thegraph"
   ],
   "scripts": {
+    "install": "npx husky install",
     "test": "npx asp",
     "lint-fix": "prettier --write \"./**/*.ts\" && prettier --write \"./**/*.js\"",
     "clean": "bash ./scripts/clean.sh",

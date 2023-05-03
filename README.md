@@ -1,20 +1,39 @@
+[![npm](https://img.shields.io/npm/v/@dlsl/graph-modules.svg)](https://www.npmjs.com/package/@dlsl/graph-modules) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-# Solidity Graph Modules by Distributed Lab
 
-This repository contains useful modules for writing subgraphs for the Graph project. These modules can be imported and used to create customized subgraphs for specific tasks.
+# Graph Modules by Distributed Lab
 
-- ArrayHelper
+This repository contains utility modules for implementting subgraphs for [The Graph protocol](https://thegraph.com/en/). The modules can be imported and used to help develop extended subgraphs logic for numerous tasks. 
+
+_The project is in the early stage of development and many new modules will be added soon. Here is what is available right now:_
+
+- ArrayHelper module to ease work with arrays
 
 ## Overview
 
 ### Installation
 
+```console
+$ npm install @dlsl/graph-modules
+```
+
 The latest stable version is always in the `master` branch.
 
 ### Usage
 
-You will find the helper modules in the `/modules` directory. Feel free to play around and check the source code, it is rather descriptive.
+```typescript
+import { pushUnique } from '@dlsl/graph-modules'
 
+export function handleDelegated(event: Delegated): void {
+    . . .
+
+    user.delegateNfts = pushUnique<BigInt>(user.delegateNfts, event.params.nfts);
+
+    . . .
+}
+```
+
+You will find the helper modules in the `/modules` directory. 
 
 ## License
 
