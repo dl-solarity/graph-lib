@@ -12,9 +12,7 @@
     "thegraph"
   ],
   "files": [
-    "modules/",
-    "LICENSE",
-    "README.md"
+    "*"
   ],
   "dependencies": {
     "@graphprotocol/graph-ts": "0.29.3"

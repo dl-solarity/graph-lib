@@ -1,1 +1,1 @@
-export * from "./ArrayHelper";
+export * from "./arrays/array-helper";

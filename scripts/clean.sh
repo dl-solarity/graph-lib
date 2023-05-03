@@ -1,3 +1,5 @@
 #!/usr/bin/bash
 
-rm -r ./publish/!(package.json)
+mv ./publish/package.json ./scripts
+rm -r ./publish/*
+mv ./scripts/package.json ./publish/
