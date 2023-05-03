@@ -24,6 +24,5 @@
   "bugs": {
     "url": "https://github.com/dl-solidity-library/graph-modules/issues"
   },
-  "type": "module",
   "types": "index.ts"
 }
