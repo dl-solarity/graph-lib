@@ -1,26 +1,7 @@
 import { describe, assert, beforeAll, test } from "matchstick-as";
-import { Entity, BigInt } from "@graphprotocol/graph-ts";
-import { findPrevHistory } from "../../modules/utils/history-searcher";
-
-const storeMap = new Map<string, MockEntity>();
-
-class MockEntity extends Entity {
-  id: string;
-
-  constructor(id: string) {
-    super();
-    this.id = id;
-  }
-
-  static load(id: string): MockEntity | null {
-    let entity = storeMap.get(id);
-    return typeof entity === "undefined" ? null : entity;
-  }
-
-  save(): void {
-    storeMap.set(this.id, this);
-  }
-}
+import { BigInt } from "@graphprotocol/graph-ts";
+import { findPrevHistory } from "../../modules/";
+import { MockEntity } from "../mocks/MockEntity";
 
 describe("history-searcher", () => {
   const idBase = "entityid";
@@ -43,6 +24,25 @@ describe("history-searcher", () => {
 
       assert.assertNotNull(prevEntity);
       assert.stringEquals(prevEntity!.id, idBase + "1");
+    });
+
+    test("should find prev history when starting suffix = 10", () => {
+      let currentSuffix = BigInt.fromI32(10);
+      let decrement = BigInt.fromI32(1);
+
+      let prevEntity = findPrevHistory<MockEntity>(MockEntity.load, idBase, currentSuffix, decrement, 100);
+
+      assert.assertNotNull(prevEntity);
+      assert.stringEquals(prevEntity!.id, idBase + "3");
+    });
+
+    test("should found nothing", () => {
+      let currentSuffix = BigInt.fromI32(1);
+      let decrement = BigInt.fromI32(1);
+
+      let prevEntity = findPrevHistory<MockEntity>(MockEntity.load, idBase, currentSuffix, decrement, 100);
+
+      assert.assertNull(prevEntity);
     });
   });
 });
