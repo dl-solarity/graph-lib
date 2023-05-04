@@ -1,6 +1,6 @@
 {
   "name": "@dlsl/graph-modules",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "license": "MIT",
   "author": "Distributed Lab",
   "readme": "README.md",
@@ -24,6 +24,5 @@
   "bugs": {
     "url": "https://github.com/dl-solidity-library/graph-modules/issues"
   },
-  "type": "module",
   "types": "index.ts"
 }

@@ -1,6 +1,6 @@
 {
   "name": "dlsl",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "license": "MIT",
   "author": "Distributed Lab",
   "readme": "README.md",
@@ -13,8 +13,8 @@
   ],
   "scripts": {
     "install": "npx husky install",
-    "test": "npx asp",
-    "lint-fix": "prettier --write \"./**/*.ts\" && prettier --write \"./**/*.js\"",
+    "test": "graph test",
+    "lint-fix": "prettier --write \"./**/*.{ts,js}\"",
     "clean": "bash ./scripts/clean.sh",
     "publish-to-npm": "npm run lint-fix && bash ./scripts/publish.sh"
   },
@@ -26,13 +26,12 @@
     "url": "https://github.com/dl-solidity-library/graph-modules/issues"
   },
   "dependencies": {
+    "@graphprotocol/graph-cli": "0.48.0",
     "@graphprotocol/graph-ts": "0.29.3"
   },
   "devDependencies": {
-    "@as-pect/cli": "^8.1.0",
+    "matchstick-as": "0.5.2",
     "husky": "^7.0.2",
     "prettier": "^2.7.1"
-  },
-  "type": "module",
-  "types": "index.ts"
+  }
 }
