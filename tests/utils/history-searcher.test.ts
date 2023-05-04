@@ -36,7 +36,7 @@ describe("history-searcher", () => {
       assert.stringEquals(prevEntity!.id, idBase + "3");
     });
 
-    test("should found nothing", () => {
+    test("should not find anything", () => {
       let currentSuffix = BigInt.fromI32(1);
       let decrement = BigInt.fromI32(1);
 
