@@ -1,24 +1,37 @@
-import { ByteArray } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
+import { isBytesArray } from "../utils/type-utils";
+import { log } from "matchstick-as";
 
 export class HashTable<K extends object, V> {
-  public static readonly MAX_LOAD_FACTOR = 0.7;
+  public static readonly MAX_LOAD_FACTOR: f64 = 0.7;
 
   private keys: Array<K>;
   private values: Array<V>;
-  private activeKeysCount: number;
+  private activeKeysCount: i32;
 
-  constructor(keys: Array<K>, values: Array<V>, activeKeysCount: number) {
+  constructor(keys: Array<K>, values: Array<V>, activeKeysCount: i32) {
     assert(keys.length == values.length, "Array lengths must be the same");
     assert(keys.length >= activeKeysCount, "ActiveKeysCount must be lower of equal keys.length");
+
     this.keys = keys;
     this.values = values;
     this.activeKeysCount = activeKeysCount;
+
+    if (this.keys.length == 0) {
+      this.resize(10);
+    }
   }
 
   public get(key: K): V {
     const index = this.getHash(key, this.keys.length);
 
     for (let i = index; i < this.keys.length; i++) {
+      if (this.keys[i] == key) {
+        return this.values[i];
+      }
+    }
+
+    for (let i = 0; i < index; i++) {
       if (this.keys[i] == key) {
         return this.values[i];
       }
@@ -38,22 +51,22 @@ export class HashTable<K extends object, V> {
       this.values[index] = value;
     } else {
       for (let i = index; i < this.keys.length; i++) {
-        if (!this.keys[i]) {
+        if (this.keys[i] == instantiate<K>(0)) {
           this.keys[i] = key;
           this.values[i] = value;
           this.activeKeysCount++;
 
-          break;
+          return;
         }
       }
 
       for (let i = 0; i < index; i++) {
-        if (!this.keys[i]) {
+        if (this.keys[i] == instantiate<K>(0)) {
           this.keys[i] = key;
           this.values[i] = value;
           this.activeKeysCount++;
 
-          break;
+          return;
         }
       }
     }
@@ -71,28 +84,34 @@ export class HashTable<K extends object, V> {
     return this.values;
   }
 
-  public getLoadFactor(): number {
-    return this.activeKeysCount / this.keys.length;
+  public getLoadFactor(): f64 {
+    return this.activeKeysCount / F64.parseFloat(this.keys.length.toString());
   }
 
-  public getHash(key: K, length: number): number {
-    let hash = 0;
+  public getActiveKeysCount(): i32 {
+    return this.activeKeysCount;
+  }
+
+  public getHash(key: K, length: i32): i32 {
+    let hash: BigInt = BigInt.zero();
 
     if (isBytesArray(key)) {
-      hash = key.toU64();
+      hash = BigInt.fromUnsignedBytes(changetype<ByteArray>(key));
     } else {
       const str = key.toString();
+      let summ: i32;
       for (let i = 0; i < str.length; i++) {
-        hash += str.charCodeAt(i);
+        summ += str.charCodeAt(i);
       }
+      hash = BigInt.fromI32(summ);
     }
 
-    return hash % length;
+    return hash.mod(BigInt.fromI32(length)).toI32();
   }
 
-  private resize(): void {
-    this.keys = new Array<K>(this.keys.length * 2);
-    this.values = new Array<V>(this.values.length * 2);
+  private resize(newLength: i32): void {
+    this.keys = new Array<K>(newLength).fill(instantiate<K>(0));
+    this.values = new Array<V>(newLength).fill(instantiate<V>(0));
   }
 
   private rehash(oldKeys: Array<K>, oldValues: Array<V>): void {
@@ -105,11 +124,7 @@ export class HashTable<K extends object, V> {
     const oldKeys = this.keys;
     const oldValues = this.values;
 
-    this.resize();
+    this.resize(oldKeys.length * 2);
     this.rehash(oldKeys, oldValues);
   }
-}
-
-export function isBytesArray(object: unknown): object is ByteArray {
-  return object instanceof ByteArray;
 }
