@@ -2,7 +2,7 @@ import { assert, beforeAll, describe, log, test } from "matchstick-as";
 import { HashTable } from "../../modules/index";
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
 
-const hashTable = new HashTable<Bytes, BigInt>([], [], 0);
+let hashTable = new HashTable<Bytes, BigInt>([], [], 0);
 
 describe("hash-table", () => {
   describe("constructor", () => {
@@ -42,6 +42,7 @@ describe("hash-table", () => {
 
       for (let i = 0; i < newKeys.length; i++) {
         assert.stringEquals(hashTable.get(newKeys[i]).toString(), newValues[i].toString());
+        assert.assertTrue(hashTable.includes(newKeys[i]));
       }
 
       assert.stringEquals(hashTable.getActiveKeysCount().toString(), newKeys.length.toString());
@@ -91,7 +92,9 @@ describe("hash-table", () => {
 
   describe("resizeAndRehash()", () => {
     beforeAll(() => {
-      for (let i = 0; hashTable.getLoadFactor() < HashTable.MAX_LOAD_FACTOR; i++) {
+      hashTable = new HashTable<Bytes, BigInt>([], [], 0);
+
+      for (let i = 1; hashTable.getLoadFactor() < HashTable.MAX_LOAD_FACTOR; i++) {
         hashTable.set(Bytes.fromI32(i), BigInt.fromI32(i + 100));
 
         assert.stringEquals(hashTable.get(Bytes.fromI32(i)).toString(), BigInt.fromI32(i + 100).toString());
@@ -99,7 +102,29 @@ describe("hash-table", () => {
     });
 
     test("should resize", () => {
-      hashTable.set(Bytes.fromI32(7), BigInt.fromI32(7 + 100));
+      const oldKeys = hashTable.getKeys();
+      const oldValues = hashTable.getValues();
+      const oldActiveKeysCount = hashTable.getActiveKeysCount();
+
+      hashTable.set(Bytes.fromI32(8), BigInt.fromI32(8 + 100));
+
+      const newKeys = hashTable.getKeys();
+      const newValues = hashTable.getValues();
+      const newActiveKeysCount = hashTable.getActiveKeysCount();
+
+      assert.stringEquals((oldKeys.length * 2).toString(), newKeys.length.toString());
+      assert.stringEquals((oldValues.length * 2).toString(), newValues.length.toString());
+      assert.stringEquals((oldActiveKeysCount + 1).toString(), newActiveKeysCount.toString());
+
+      for (let i = 0; i < oldKeys.length; i++) {
+        assert.stringEquals(hashTable.get(oldKeys[i]).toString(), oldValues[i].toString());
+      }
+
+      assert.stringEquals(hashTable.get(Bytes.fromI32(7)).toString(), BigInt.fromI32(7 + 100).toString());
+
+      for (let i = oldKeys.length; i < newKeys.length; i++) {
+        assert.stringEquals(newKeys[i].toHexString(), instantiate<Bytes>(0).toHexString());
+      }
     });
   });
 });

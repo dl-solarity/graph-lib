@@ -116,13 +116,17 @@ export class HashTable<K extends object, V> {
 
   private rehash(oldKeys: Array<K>, oldValues: Array<V>): void {
     for (let i = 0; i < oldKeys.length; i++) {
-      this.set(oldKeys[i], oldValues[i]);
+      if (oldKeys[i] != instantiate<K>(0)) {
+        this.set(oldKeys[i], oldValues[i]);
+      }
     }
   }
 
   private resizeAndRehash(): void {
     const oldKeys = this.keys;
     const oldValues = this.values;
+
+    this.activeKeysCount = 0;
 
     this.resize(oldKeys.length * 2);
     this.rehash(oldKeys, oldValues);
