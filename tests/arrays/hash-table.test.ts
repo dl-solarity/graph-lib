@@ -48,7 +48,7 @@ describe("hash-table", () => {
       assert.stringEquals(hashTable.getActiveKeysCount().toString(), newKeys.length.toString());
     });
 
-    test("should add new value", () => {
+    test("should add new value, with collision", () => {
       const newKey = Bytes.fromI32(11);
       const newValue = BigInt.fromI32(11);
       const activeKeysCount = hashTable.getActiveKeysCount();
@@ -57,6 +57,23 @@ describe("hash-table", () => {
 
       assert.stringEquals(hashTable.get(newKey).toString(), newValue.toString());
       assert.stringEquals(hashTable.getActiveKeysCount().toString(), (activeKeysCount + 1).toString());
+
+      assert.stringEquals(hashTable.getHash(newKey, hashTable.getKeys().length).toString(), "1");
+      assert.stringEquals(hashTable.getKeys().indexOf(newKey).toString(), "3");
+    });
+
+    test("should add new value, with collision and overflow", () => {
+      const newKey = Bytes.fromI32(19);
+      const newValue = BigInt.fromI32(19);
+
+      hashTable.set(Bytes.fromI32(9), BigInt.fromI32(9));
+      assert.stringEquals(hashTable.get(Bytes.fromI32(9)).toString(), BigInt.fromI32(9).toString());
+
+      hashTable.set(newKey, newValue);
+      assert.stringEquals(hashTable.get(newKey).toString(), newValue.toString());
+
+      assert.stringEquals(hashTable.getHash(newKey, hashTable.getKeys().length).toString(), "9");
+      assert.stringEquals(hashTable.getKeys().indexOf(newKey).toString(), "0");
     });
 
     test("should correctly set Address as key", () => {
@@ -121,6 +138,37 @@ describe("hash-table", () => {
       }
 
       assert.stringEquals(hashTable.get(Bytes.fromI32(7)).toString(), BigInt.fromI32(7 + 100).toString());
+
+      for (let i = oldKeys.length; i < newKeys.length; i++) {
+        assert.stringEquals(newKeys[i].toHexString(), instantiate<Bytes>(0).toHexString());
+      }
+    });
+
+    test("should resize to 40", () => {
+      hashTable.set(Bytes.fromI32(8), BigInt.fromI32(8 + 100));
+      for (let i = hashTable.getActiveKeysCount(); hashTable.getLoadFactor() < HashTable.MAX_LOAD_FACTOR; i++) {
+        hashTable.set(Bytes.fromI32(i), BigInt.fromI32(i + 100));
+
+        assert.stringEquals(hashTable.get(Bytes.fromI32(i)).toString(), BigInt.fromI32(i + 100).toString());
+      }
+
+      const oldKeys = hashTable.getKeys();
+      const oldValues = hashTable.getValues();
+      const oldActiveKeysCount = hashTable.getActiveKeysCount();
+
+      hashTable.set(Bytes.fromI32(19), BigInt.fromI32(19 + 100));
+
+      const newKeys = hashTable.getKeys();
+      const newValues = hashTable.getValues();
+      const newActiveKeysCount = hashTable.getActiveKeysCount();
+
+      assert.stringEquals((oldKeys.length * 2).toString(), newKeys.length.toString());
+      assert.stringEquals((oldValues.length * 2).toString(), newValues.length.toString());
+      assert.stringEquals((oldActiveKeysCount + 1).toString(), newActiveKeysCount.toString());
+
+      for (let i = 0; i < oldKeys.length; i++) {
+        assert.stringEquals(hashTable.get(oldKeys[i]).toString(), oldValues[i].toString());
+      }
 
       for (let i = oldKeys.length; i < newKeys.length; i++) {
         assert.stringEquals(newKeys[i].toHexString(), instantiate<Bytes>(0).toHexString());
