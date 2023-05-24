@@ -1,10 +1,14 @@
-import { assert, beforeAll, describe, test } from "matchstick-as";
+import { assert, beforeAll, beforeEach, describe, test } from "matchstick-as";
 import { HashTable } from "../../modules/index";
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
 
-let hashTable = new HashTable<Bytes, BigInt>([], [], 0);
+let hashTable: HashTable<Bytes, BigInt>;
 
 describe("hash-table", () => {
+  beforeEach(() => {
+    hashTable = new HashTable<Bytes, BigInt>([], [], 0);
+  });
+
   describe("constructor", () => {
     test(
       "should fail when array lengths are not equal",
@@ -49,6 +53,8 @@ describe("hash-table", () => {
     });
 
     test("should add new value, with collision", () => {
+      hashTable.set(Bytes.fromI32(1), BigInt.fromI32(1));
+
       const newKey = Bytes.fromI32(11);
       const newValue = BigInt.fromI32(11);
       const activeKeysCount = hashTable.getActiveKeysCount();
@@ -59,7 +65,7 @@ describe("hash-table", () => {
       assert.stringEquals(hashTable.getActiveKeysCount().toString(), (activeKeysCount + 1).toString());
 
       assert.stringEquals(hashTable.getHash(newKey, hashTable.getKeys().length).toString(), "1");
-      assert.stringEquals(hashTable.getKeys().indexOf(newKey).toString(), "3");
+      assert.stringEquals(hashTable.getKeys().indexOf(newKey).toString(), "2");
     });
 
     test("should add new value, with collision and overflow", () => {
@@ -108,9 +114,7 @@ describe("hash-table", () => {
   });
 
   describe("resizeAndRehash()", () => {
-    beforeAll(() => {
-      hashTable = new HashTable<Bytes, BigInt>([], [], 0);
-
+    beforeEach(() => {
       for (let i = 1; hashTable.getLoadFactor() < HashTable.MAX_LOAD_FACTOR; i++) {
         hashTable.set(Bytes.fromI32(i), BigInt.fromI32(i + 100));
 
