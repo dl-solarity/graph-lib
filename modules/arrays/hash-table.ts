@@ -1,6 +1,5 @@
-import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
+import { BigInt, ByteArray } from "@graphprotocol/graph-ts";
 import { isBytesArray } from "../utils/type-utils";
-import { log } from "matchstick-as";
 
 export class HashTable<K extends object, V> {
   public static readonly MAX_LOAD_FACTOR: f64 = 0.7;
