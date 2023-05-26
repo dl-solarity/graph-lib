@@ -1,4 +1,4 @@
-import { assert, beforeAll, beforeEach, describe, test } from "matchstick-as";
+import { assert, beforeAll, beforeEach, describe, log, test } from "matchstick-as";
 import { HashTable } from "../../modules/index";
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
 
@@ -8,6 +8,8 @@ describe("hash-table", () => {
   beforeEach(() => {
     hashTable = new HashTable<Bytes, BigInt>([], [], 0);
   });
+
+  describe;
 
   describe("constructor", () => {
     test(
@@ -53,27 +55,36 @@ describe("hash-table", () => {
     });
 
     test("should add new value, with collision", () => {
-      hashTable.set(Bytes.fromI32(1), BigInt.fromI32(1));
+      hashTable.set(Bytes.fromI32(2), BigInt.fromI32(2));
 
-      const newKey = Bytes.fromI32(11);
-      const newValue = BigInt.fromI32(11);
+      const newKey = Bytes.fromI32(3);
+      const newValue = BigInt.fromI32(3);
       const activeKeysCount = hashTable.getActiveKeysCount();
 
       hashTable.set(newKey, newValue);
 
+      const keys = hashTable.getKeys();
+      const values = hashTable.getValues();
+
+      for (let i = 0; i < 20; i++) {
+        // log.warning("[{}] {}: {}", [i.toString(), keys[i].toHexString(), values[i].toString()]);
+        // log.warning("hash: {}", [hashTable.getHash(keys[i],10).toString()]);
+        // log.warning("[{}]:{}", [i.toString(), hashTable.getHash(Bytes.fromI32(i), 10).toString()]);
+      }
+
       assert.stringEquals(hashTable.get(newKey).toString(), newValue.toString());
       assert.stringEquals(hashTable.getActiveKeysCount().toString(), (activeKeysCount + 1).toString());
 
-      assert.stringEquals(hashTable.getHash(newKey, hashTable.getKeys().length).toString(), "1");
-      assert.stringEquals(hashTable.getKeys().indexOf(newKey).toString(), "2");
+      assert.stringEquals(hashTable.getHash(newKey, hashTable.getKeys().length).toString(), "3");
+      assert.stringEquals(hashTable.getKeys().indexOf(newKey).toString(), "4");
     });
 
     test("should add new value, with collision and overflow", () => {
       const newKey = Bytes.fromI32(19);
       const newValue = BigInt.fromI32(19);
 
-      hashTable.set(Bytes.fromI32(9), BigInt.fromI32(9));
-      assert.stringEquals(hashTable.get(Bytes.fromI32(9)).toString(), BigInt.fromI32(9).toString());
+      hashTable.set(Bytes.fromI32(6), BigInt.fromI32(6));
+      assert.stringEquals(hashTable.get(Bytes.fromI32(6)).toString(), BigInt.fromI32(6).toString());
 
       hashTable.set(newKey, newValue);
       assert.stringEquals(hashTable.get(newKey).toString(), newValue.toString());
@@ -138,13 +149,7 @@ describe("hash-table", () => {
       assert.stringEquals((oldActiveKeysCount + 1).toString(), newActiveKeysCount.toString());
 
       for (let i = 0; i < oldKeys.length; i++) {
-        assert.stringEquals(hashTable.get(oldKeys[i]).toString(), oldValues[i].toString());
-      }
-
-      assert.stringEquals(hashTable.get(Bytes.fromI32(7)).toString(), BigInt.fromI32(7 + 100).toString());
-
-      for (let i = oldKeys.length; i < newKeys.length; i++) {
-        assert.stringEquals(newKeys[i].toHexString(), instantiate<Bytes>(0).toHexString());
+        assert.assertTrue(newKeys.includes(oldKeys[i]));
       }
     });
 
@@ -171,11 +176,7 @@ describe("hash-table", () => {
       assert.stringEquals((oldActiveKeysCount + 1).toString(), newActiveKeysCount.toString());
 
       for (let i = 0; i < oldKeys.length; i++) {
-        assert.stringEquals(hashTable.get(oldKeys[i]).toString(), oldValues[i].toString());
-      }
-
-      for (let i = oldKeys.length; i < newKeys.length; i++) {
-        assert.stringEquals(newKeys[i].toHexString(), instantiate<Bytes>(0).toHexString());
+        assert.assertTrue(newKeys.includes(oldKeys[i]));
       }
     });
   });

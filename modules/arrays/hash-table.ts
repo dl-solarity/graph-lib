@@ -1,5 +1,6 @@
 import { BigInt, ByteArray } from "@graphprotocol/graph-ts";
 import { isBytesArray } from "../utils/type-utils";
+import { HASH } from "assemblyscript/std/assembly/util/hash";
 
 export class HashTable<K extends object, V> {
   public static readonly MAX_LOAD_FACTOR: f64 = 0.7;
@@ -91,21 +92,20 @@ export class HashTable<K extends object, V> {
     return this.activeKeysCount;
   }
 
-  public getHash(key: K, length: i32): i32 {
-    let hash: BigInt = BigInt.zero();
+  public getHash(data: K, length: i32): i32 {
+    let hash: u32 = 0;
 
-    if (isBytesArray(key)) {
-      hash = BigInt.fromUnsignedBytes(changetype<ByteArray>(key));
-    } else {
-      const str = key.toString();
-      let summ: i32;
-      for (let i = 0; i < str.length; i++) {
-        summ += str.charCodeAt(i);
-      }
-      hash = BigInt.fromI32(summ);
+    for (let i: i32 = 0; i < data.length; i++) {
+      hash += data[i];
+      hash += hash << 10;
+      hash ^= hash >> 6;
     }
 
-    return hash.mod(BigInt.fromI32(length)).toI32();
+    hash += hash << 3;
+    hash ^= hash >> 11;
+    hash += hash << 15;
+
+    return BigInt.fromU32(hash).mod(BigInt.fromI32(length)).toI32();
   }
 
   private resize(newLength: i32): void {
