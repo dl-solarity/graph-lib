@@ -26,6 +26,10 @@ export class HashTable<K extends object, V> {
   }
 
   public get(key: K): V {
+    if (key == this.zeroKey) {
+      throw new Error("Key is empty");
+    }
+
     const index = this.getHash(key, this.keys.length);
 
     for (let i = index; i < this.keys.length; i++) {
@@ -44,6 +48,10 @@ export class HashTable<K extends object, V> {
   }
 
   public set(key: K, value: V): void {
+    if (key == this.zeroKey) {
+      throw new Error("Key is empty");
+    }
+
     if (HashTable.MAX_LOAD_FACTOR <= this.getLoadFactor()) {
       this.resizeAndRehash();
     }

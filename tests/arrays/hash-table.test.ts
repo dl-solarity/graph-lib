@@ -1,5 +1,5 @@
 import { assert, beforeEach, describe, log, test } from "matchstick-as";
-import { HashTable } from "../../modules/index";
+import { HashTable } from "../../modules";
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
 
 let hashTable: HashTable<Bytes, BigInt>;
@@ -112,6 +112,20 @@ describe("hash-table", () => {
 
       assert.stringEquals(newHashTable.get("hello").toString(), BigInt.fromI32(4).toString());
     });
+
+    test("should correctly set empty value", () => {
+      hashTable.set(Bytes.fromI32(50), instantiate<BigInt>(0));
+
+      assert.stringEquals(hashTable.get(Bytes.fromI32(50)).toString(), instantiate<BigInt>(0).toString());
+    });
+
+    test(
+      "should fail when key is empty",
+      () => {
+        hashTable.set(instantiate<Bytes>(0), instantiate<BigInt>(0));
+      },
+      true
+    );
   });
 
   describe("get()", () => {
@@ -121,6 +135,14 @@ describe("hash-table", () => {
         const key = Bytes.fromI32(50);
 
         hashTable.get(key);
+      },
+      true
+    );
+
+    test(
+      "should throw Key is empty",
+      () => {
+        hashTable.get(instantiate<Bytes>(0));
       },
       true
     );
