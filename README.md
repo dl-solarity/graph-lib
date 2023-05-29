@@ -3,11 +3,14 @@
 
 # Graph Modules by Distributed Lab
 
-This repository contains utility modules for implementting subgraphs for [The Graph protocol](https://thegraph.com/en/). The modules can be imported and used to help develop extended subgraphs logic for numerous tasks. 
+This repository contains utility modules for implementing subgraphs for [The Graph protocol](https://thegraph.com/en/). The modules can be imported and used to help develop extended subgraphs logic for numerous tasks. 
 
 _The project is in the early stage of development and many new modules will be added soon. Here is what is available right now:_
 
-- ArrayHelper module to ease work with arrays
+- array-helper module to ease work with arrays
+- hash-table module to bound two arrays (like key-value struct) efficiently
+- history-searcher module to search previous history entity with id pattern `idBase + blockNumber` 
+- type-utils module to easily determine if a given value is an instance of `ByteArray`, `Bytes`, or `Address`
 
 ## Overview
 
