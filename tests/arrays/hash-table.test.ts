@@ -1,4 +1,4 @@
-import { assert, beforeAll, beforeEach, describe, log, test } from "matchstick-as";
+import { assert, beforeEach, describe, log, test } from "matchstick-as";
 import { HashTable } from "../../modules/index";
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
 
@@ -6,10 +6,8 @@ let hashTable: HashTable<Bytes, BigInt>;
 
 describe("hash-table", () => {
   beforeEach(() => {
-    hashTable = new HashTable<Bytes, BigInt>([], [], 0);
+    hashTable = new HashTable<Bytes, BigInt>([], [], 0, instantiate<Bytes>(0), instantiate<BigInt>(0));
   });
-
-  describe;
 
   describe("constructor", () => {
     test(
@@ -18,7 +16,9 @@ describe("hash-table", () => {
         new HashTable<ByteArray, BigInt>(
           [Bytes.fromBigInt(BigInt.fromI32(1)), Bytes.fromBigInt(BigInt.fromI32(2))],
           [BigInt.fromI32(3)],
-          2
+          2,
+          instantiate<Bytes>(0),
+          instantiate<BigInt>(0)
         );
       },
       true
@@ -30,7 +30,9 @@ describe("hash-table", () => {
         new HashTable<ByteArray, BigInt>(
           [Bytes.fromBigInt(BigInt.fromI32(1)), Bytes.fromBigInt(BigInt.fromI32(2))],
           [BigInt.fromI32(1), BigInt.fromI32(2)],
-          5
+          5,
+          instantiate<Bytes>(0),
+          instantiate<BigInt>(0)
         );
       },
       true
@@ -64,19 +66,12 @@ describe("hash-table", () => {
       hashTable.set(newKey, newValue);
 
       const keys = hashTable.getKeys();
-      const values = hashTable.getValues();
-
-      for (let i = 0; i < 20; i++) {
-        // log.warning("[{}] {}: {}", [i.toString(), keys[i].toHexString(), values[i].toString()]);
-        // log.warning("hash: {}", [hashTable.getHash(keys[i],10).toString()]);
-        // log.warning("[{}]:{}", [i.toString(), hashTable.getHash(Bytes.fromI32(i), 10).toString()]);
-      }
 
       assert.stringEquals(hashTable.get(newKey).toString(), newValue.toString());
       assert.stringEquals(hashTable.getActiveKeysCount().toString(), (activeKeysCount + 1).toString());
 
       assert.stringEquals(hashTable.getHash(newKey, hashTable.getKeys().length).toString(), "3");
-      assert.stringEquals(hashTable.getKeys().indexOf(newKey).toString(), "4");
+      assert.stringEquals(keys.indexOf(newKey).toString(), "4");
     });
 
     test("should add new value, with collision and overflow", () => {
@@ -105,16 +100,23 @@ describe("hash-table", () => {
     });
 
     test("should correctly set, when key isn't in BytesArray class tree", () => {
-      const newHashTable = new HashTable<BigInt, BigInt>([], [], 0);
+      const newHashTable = new HashTable<BigInt, BigInt>([], [], 0, instantiate<BigInt>(0), instantiate<BigInt>(0));
       newHashTable.set(BigInt.fromI32(4), BigInt.fromI32(4));
 
       assert.stringEquals(newHashTable.get(BigInt.fromI32(4)).toString(), BigInt.fromI32(4).toString());
+    });
+
+    test("should correctly set, when key is string", () => {
+      const newHashTable = new HashTable<String, BigInt>([], [], 0, instantiate<String>(), instantiate<BigInt>(0));
+      newHashTable.set("hello", BigInt.fromI32(4));
+
+      assert.stringEquals(newHashTable.get("hello").toString(), BigInt.fromI32(4).toString());
     });
   });
 
   describe("get()", () => {
     test(
-      "should trow Key not found",
+      "should throw Key not found",
       () => {
         const key = Bytes.fromI32(50);
 
@@ -177,6 +179,16 @@ describe("hash-table", () => {
 
       for (let i = 0; i < oldKeys.length; i++) {
         assert.assertTrue(newKeys.includes(oldKeys[i]));
+      }
+    });
+
+    test("should add 1000 elements", () => {
+      for (let i = 0; i < 1000; i++) {
+        hashTable.set(Bytes.fromI32(i), BigInt.fromI32(i));
+      }
+
+      for (let i = 0; i < 1000; i++) {
+        assert.stringEquals(hashTable.get(Bytes.fromI32(i)).toString(), BigInt.fromI32(i).toString());
       }
     });
   });

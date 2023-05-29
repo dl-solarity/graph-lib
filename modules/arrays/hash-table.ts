@@ -1,6 +1,4 @@
-import { BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import { isBytesArray } from "../utils/type-utils";
-import { HASH } from "assemblyscript/std/assembly/util/hash";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 export class HashTable<K extends object, V> {
   public static readonly MAX_LOAD_FACTOR: f64 = 0.7;
@@ -8,14 +6,19 @@ export class HashTable<K extends object, V> {
   private keys: Array<K>;
   private values: Array<V>;
   private activeKeysCount: i32;
+  private zeroKey: K;
+  private zeroValue: V;
 
-  constructor(keys: Array<K>, values: Array<V>, activeKeysCount: i32) {
+  constructor(keys: Array<K>, values: Array<V>, activeKeysCount: i32, zeroKey: K, zeroValue: V) {
     assert(keys.length == values.length, "Array lengths must be the same");
     assert(keys.length >= activeKeysCount, "ActiveKeysCount must be lower of equal keys.length");
 
     this.keys = keys;
     this.values = values;
     this.activeKeysCount = activeKeysCount;
+
+    this.zeroKey = zeroKey;
+    this.zeroValue = zeroValue;
 
     if (this.keys.length == 0) {
       this.resize(10);
@@ -51,7 +54,7 @@ export class HashTable<K extends object, V> {
       this.values[index] = value;
     } else {
       for (let i = index; i < this.keys.length; i++) {
-        if (this.keys[i] == instantiate<K>(0)) {
+        if (this.keys[i] == this.zeroKey) {
           this.keys[i] = key;
           this.values[i] = value;
           this.activeKeysCount++;
@@ -61,7 +64,7 @@ export class HashTable<K extends object, V> {
       }
 
       for (let i = 0; i < index; i++) {
-        if (this.keys[i] == instantiate<K>(0)) {
+        if (this.keys[i] == this.zeroKey) {
           this.keys[i] = key;
           this.values[i] = value;
           this.activeKeysCount++;
@@ -96,7 +99,7 @@ export class HashTable<K extends object, V> {
     let hash: u32 = 0;
 
     for (let i: i32 = 0; i < data.length; i++) {
-      hash += data[i];
+      hash += data instanceof String ? data.charCodeAt(i) : data[i];
       hash += hash << 10;
       hash ^= hash >> 6;
     }
@@ -109,13 +112,13 @@ export class HashTable<K extends object, V> {
   }
 
   private resize(newLength: i32): void {
-    this.keys = new Array<K>(newLength).fill(instantiate<K>(0));
-    this.values = new Array<V>(newLength).fill(instantiate<V>(0));
+    this.keys = new Array<K>(newLength).fill(this.zeroKey);
+    this.values = new Array<V>(newLength).fill(this.zeroValue);
   }
 
   private rehash(oldKeys: Array<K>, oldValues: Array<V>): void {
     for (let i = 0; i < oldKeys.length; i++) {
-      if (oldKeys[i] != instantiate<K>(0)) {
+      if (oldKeys[i] != this.zeroKey) {
         this.set(oldKeys[i], oldValues[i]);
       }
     }
