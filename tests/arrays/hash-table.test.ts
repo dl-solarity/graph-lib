@@ -1,5 +1,5 @@
-import { assert, beforeEach, describe, log, test } from "matchstick-as";
-import { HashTable } from "../../modules";
+import { assert, beforeEach, describe, test } from "matchstick-as";
+import { HashTable } from "../../lib";
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
 
 let hashTable: HashTable<Bytes, BigInt>;

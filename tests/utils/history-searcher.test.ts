@@ -1,6 +1,6 @@
 import { describe, assert, beforeAll, test } from "matchstick-as";
 import { BigInt } from "@graphprotocol/graph-ts";
-import { findPrevHistory } from "../../modules/";
+import { findPrevHistory } from "../../lib";
 import { MockEntity } from "../mocks/MockEntity";
 
 describe("history-searcher", () => {

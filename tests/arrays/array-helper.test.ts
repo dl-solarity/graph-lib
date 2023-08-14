@@ -1,6 +1,6 @@
 import { describe, assert, test } from "matchstick-as";
 import { Address, Bytes } from "@graphprotocol/graph-ts";
-import { pushUnique, remove, upcastCopy } from "../../modules";
+import { pushUnique, remove, upcastCopy } from "../../lib";
 
 describe("array-helper", () => {
   describe("pushUnique", () => {

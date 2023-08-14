@@ -1,5 +1,5 @@
 {
-  "name": "@dlsl/graph-modules",
+  "name": "@solarity/graph-lib",
   "version": "1.0.0-rc.3",
   "license": "MIT",
   "author": "Distributed Lab",
@@ -7,6 +7,7 @@
   "description": "Useful modules for developing subgraphs for The Graph protocol",
   "keywords": [
     "distributedlab",
+    "solarity",
     "ethereum",
     "subgraph",
     "thegraph"
@@ -19,10 +20,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dl-solidity-library/graph-modules.git"
+    "url": "git+https://github.com/dl-solarity/graph-lib.git"
   },
   "bugs": {
-    "url": "https://github.com/dl-solidity-library/graph-modules/issues"
+    "url": "https://github.com/dl-solarity/graph-lib/issues"
   },
   "types": "index.ts"
 }

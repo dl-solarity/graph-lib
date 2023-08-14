@@ -1,5 +1,5 @@
 import { assert, describe, test } from "matchstick-as";
-import { isAddress, isBytes, isBytesArray } from "../../modules/utils/type-utils";
+import { isAddress, isBytes, isBytesArray } from "../../lib/utils/type-utils";
 import { Address, BigInt, ByteArray, Bytes } from "@graphprotocol/graph-ts";
 
 describe("type-utisl", () => {
