@@ -36,7 +36,8 @@ export function handleDelegated(event: Delegated): void {
 }
 ```
 
-You will find the helper modules in the `/modules` directory.
+You will find the helper modules in the `/lib` directory.
+
 
 ## License
 
