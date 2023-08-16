@@ -1,6 +1,6 @@
 {
   "name": "@solarity/graph-lib",
-  "version": "1.0.0-rc.4",
+  "version": "1.0.0-rc.5",
   "license": "MIT",
   "author": "Distributed Lab",
   "readme": "README.md",
@@ -12,8 +12,6 @@
     "subgraph",
     "thegraph"
   ],
-
-  
   "scripts": {
     "install": "npx husky install",
     "test": "graph test",
