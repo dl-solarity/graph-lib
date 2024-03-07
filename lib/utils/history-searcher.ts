@@ -6,7 +6,7 @@ export function findPrevHistory<T>(
   idSuffix: BigInt,
   decrement: BigInt,
   maxSearchDepth: i32,
-  minimum: BigInt = BigInt.zero()
+  minimum: BigInt = BigInt.zero(),
 ): T | null {
   let newSuffix = idSuffix.minus(decrement);
   let history = loadFunction(idBase + newSuffix.toString());

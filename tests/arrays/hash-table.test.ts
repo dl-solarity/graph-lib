@@ -18,10 +18,10 @@ describe("hash-table", () => {
           [BigInt.fromI32(3)],
           2,
           instantiate<Bytes>(0),
-          instantiate<BigInt>(0)
+          instantiate<BigInt>(0),
         );
       },
-      true
+      true,
     );
 
     test(
@@ -32,10 +32,10 @@ describe("hash-table", () => {
           [BigInt.fromI32(1), BigInt.fromI32(2)],
           5,
           instantiate<Bytes>(0),
-          instantiate<BigInt>(0)
+          instantiate<BigInt>(0),
         );
       },
-      true
+      true,
     );
   });
 
@@ -124,7 +124,7 @@ describe("hash-table", () => {
       () => {
         hashTable.set(instantiate<Bytes>(0), instantiate<BigInt>(0));
       },
-      true
+      true,
     );
   });
 
@@ -136,7 +136,7 @@ describe("hash-table", () => {
 
         hashTable.get(key);
       },
-      true
+      true,
     );
 
     test(
@@ -144,7 +144,7 @@ describe("hash-table", () => {
       () => {
         hashTable.get(instantiate<Bytes>(0));
       },
-      true
+      true,
     );
   });
 
